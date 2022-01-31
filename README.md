@@ -14,7 +14,7 @@ This mod requires [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabr
 
 Put the .jar file from [releases](https://github.com/Tre5et/audio-hotkeys/releases) into your Minecraft Mod folder.
 
-## List of features (v1.0.0)
+## List of features (v1.0)
 
 - flexible and independent hotkeys for all minecraft sound categories
 - settings screen for easy configuration
