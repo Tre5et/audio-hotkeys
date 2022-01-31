@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "audio_hotkeys",
+  "version": "${version}",
+
+  "name": "Audio Hotkeys",
+  "description": "Configurable audio hotkeys for easy adjustment.",
+  "authors": [
+    "TreSet"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Tre5et/audio-hotkeys/releases",
+    "sources": "https://github.com/Tre5et/audio-hotkeys",
+    "issues": "https://github.com/Tre5et/audio-hotkeys/issues"
+  },
+
+  "license": "GPL-3.0",
+  "icon": "assets/audio_hotkeys/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.treset.audio_hotkeys.HotkeyMod"
+    ],
+    "client": [
+      "net.treset.audio_hotkeys.HotkeyClient"
+    ],
+    "modmenu": [
+      "net.treset.audio_hotkeys.modmenu.ModMenuCompat"
+    ]
+  },
+  "mixins": [
+    "audio_hotkeys.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "fabric-api": "Fabric API",
+    "malilib": "MaLiLib"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "key.audio_hotkeys.config_gui" : "Open Configuration",
+  "category.audio_hotkeys.compass": "Audio Hotkeys",
+
+  "config.audio_hotkeys.gui.button.master": "Master",
+  "config.audio_hotkeys.gui.button.music": "Music",
+  "config.audio_hotkeys.gui.button.static": "Ingame",
+  "config.audio_hotkeys.gui.button.creatures": "Creatures",
+  "config.audio_hotkeys.gui.button.other": "Other",
+  "config.audio_hotkeys.gui.title": "Audio Hotkeys Settings"
+}
