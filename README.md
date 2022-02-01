@@ -4,7 +4,7 @@
 
 ## Description
 
-This mod allows you to toggle mute and change volume of the minecraft sound categories with convenient and flexible hotkeys.
+This client only mod allows you to toggle mute and change volume of the minecraft sound categories with convenient and flexible hotkeys.
 
 The settings page opens by pressing O by defaut and can be accesed via [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu).
 
