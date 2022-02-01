@@ -71,6 +71,10 @@ public class AudioLevels {
                 obj.addProperty(e.name + "_unmute_value", e.unmuteVolume);
             }
 
+            if((opt = MinecraftClient.getInstance().options) != null) {
+                opt.write();
+            } else HotkeyMod.LOGGER.warn("Failed to save client options.");
+
             return(FileTools.writeJsonToFile(obj, new File(dir, HotkeyMod.LEVELS_FILE_NAME)));
         }
         return false;

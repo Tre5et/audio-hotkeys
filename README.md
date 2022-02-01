@@ -4,7 +4,7 @@
 
 ## Description
 
-This client only mod allows you to toggle mute and change volume of the minecraft sound categories with convenient and flexible hotkeys.
+This mod allows you to toggle mute and change volume of the minecraft sound categories with convenient and flexible hotkeys.
 
 The settings page opens by pressing O by defaut and can be accesed via [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu).
 
@@ -14,7 +14,7 @@ This mod requires [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabr
 
 Put the .jar file from [releases](https://github.com/Tre5et/audio-hotkeys/releases) into your Minecraft Mod folder.
 
-## List of features (v1.0)
+## List of features (v1.0.0)
 
 - flexible and independent hotkeys for all minecraft sound categories
 - settings screen for easy configuration
