@@ -100,6 +100,8 @@ public class AudioLevels {
                     setSoundLevel(e, 0);
                     OverlayManager.drawOverlay(new AudioOverlay("Muted " + e.name + ".", TextureCoordinate.MUTE, 2000));
                 } else {
+                    if((opt = MinecraftClient.getInstance().options) == null) return;
+
                     if(opt.getSoundVolume(e.target.getCategory()) == 0) {
                         setSoundLevel(e, e.unmuteVolume);
                         OverlayManager.drawOverlay(new AudioOverlay("Unmuted " + e.name + ". Volume is now " + e.unmuteVolume + "%.", TextureCoordinate.UNMUTE, 2000));
@@ -117,7 +119,9 @@ public class AudioLevels {
     public static void changeSoundLevel(VolumeTarget t, int value) {
         for(AudioState e : STATES) {
             if(e.target == t) {
-                int currentVolume = (int)(opt.getSoundVolume(e.target.getCategory()) * 100);
+                if((opt = MinecraftClient.getInstance().options) == null) return;
+
+                    int currentVolume = (int)(opt.getSoundVolume(e.target.getCategory()) * 100);
                 int targetVolume = (int) MathTools.clamp(currentVolume + value, 0, 100);
                 setSoundLevel(e, targetVolume);
 
@@ -130,7 +134,7 @@ public class AudioLevels {
     }
 
     public static void toggleSubtitles(VolumeTarget t) {
-        GameOptions opt = MinecraftClient.getInstance().options;
+        if((opt = MinecraftClient.getInstance().options) == null) return;
 
         opt.showSubtitles = !opt.showSubtitles;
         if(opt.showSubtitles) {
@@ -153,20 +157,14 @@ public class AudioLevels {
     }
 
     public static void setSoundLevel(AudioState m, int value) {
-        if(opt == null) {
-            opt = MinecraftClient.getInstance().options;
-        }
-
-        if(opt == null) return;
+        if((opt = MinecraftClient.getInstance().options) == null) return;
 
         float targetVolume = MathTools.clamp((float)value / 100, 0, 1);
         opt.setSoundVolume(m.target.getCategory(), targetVolume);
     }
 
     public static void updateSoundLevels() {
-        if(opt == null) {
-            opt = MinecraftClient.getInstance().options;
-        }
+        if(opt == null) opt = MinecraftClient.getInstance().options;
 
         for(AudioState e : STATES) {
             if(!e.muted && opt != null) {
