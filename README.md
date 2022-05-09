@@ -10,7 +10,7 @@ The settings page opens by pressing O by defaut and can be accesed via [Mod Menu
 
 ## Setup
 
-This mod requires [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api) and [MaLiLib](https://www.curseforge.com/minecraft/mc-mods/malilib)!
+This mod requires [VanillaConfig](https://www.curseforge.com/minecraft/mc-mods/vanillaconfig) (since v1.0.3)!
 
 Put the .jar file from [releases](https://github.com/Tre5et/audio-hotkeys/releases) into your Minecraft Mod folder.
 
@@ -18,7 +18,7 @@ Put the .jar file from [releases](https://github.com/Tre5et/audio-hotkeys/releas
 
 - flexible and independent hotkeys for all minecraft sound categories
 - settings screen for easy configuration
-- toggling of mute of each category
+- toggling of mute for each category
 - increasing and decreasing volume of each category by a set percentage
 - toggling of subtitles
 - unobtrusive UI to tell the player which changes they made

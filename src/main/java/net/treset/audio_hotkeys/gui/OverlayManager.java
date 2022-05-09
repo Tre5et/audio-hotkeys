@@ -7,6 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.treset.audio_hotkeys.HotkeyMod;
+import net.treset.vanillaconfig.tools.TextTools;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,6 @@ public class OverlayManager {
 
         RenderSystem.setShaderTexture(0, SPRITESHEET);
         DrawableHelper.drawTexture(matrices, 5, 5, renderOverlay.coordinate.getCoordinates()[0], renderOverlay.coordinate.getCoordinates()[1], 24, 24, 48, 48);
-        DrawableHelper.drawTextWithShadow(matrices, MinecraftClient.getInstance().textRenderer, Text.of(renderOverlay.text), 31, 13, 0xffffff);
+        DrawableHelper.drawTextWithShadow(matrices, MinecraftClient.getInstance().textRenderer, Text.of(TextTools.translateOrDefault(renderOverlay.text)), 31, 13, 0xffffff);
     }
 }

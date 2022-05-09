@@ -1,29 +1,58 @@
 package net.treset.audio_hotkeys.tools;
 
-import fi.dy.masa.malilib.gui.GuiBase;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.MinecraftClient;
 import net.treset.audio_hotkeys.HotkeyClient;
-import net.treset.audio_hotkeys.config.gui.ConfigGui;
+import net.treset.audio_hotkeys.audiolevels.AudioLevels;
+import net.treset.audio_hotkeys.config.Config;
+import net.treset.audio_hotkeys.tools.objects.VolumeTarget;
+import net.treset.vanillaconfig.config.IntegerConfig;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KeybindTools {
-    private static final List<KeyBinding> keys = new ArrayList<>();
+    private static Map<String, VolumeTarget> keyVolumeTargets = new HashMap<String, VolumeTarget>();
 
-    public static void registerKeybind(String key, int keyCode) {
-        KeyBinding keybinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-           key, InputUtil.Type.KEYSYM, keyCode, "category.audio_hotkeys.compass")); //specify keybind
-
-        keys.add(keybinding);
+    public static void init() {
+        keyVolumeTargets.put("master", VolumeTarget.MASTER);
+        keyVolumeTargets.put("subtitles", VolumeTarget.SUBTITLES);
+        keyVolumeTargets.put("music", VolumeTarget.MUSIC);
+        keyVolumeTargets.put("jukebox", VolumeTarget.JUKEBOX);
+        keyVolumeTargets.put("environment", VolumeTarget.ENVIRONMENT);
+        keyVolumeTargets.put("weather", VolumeTarget.WEATHER);
+        keyVolumeTargets.put("blocks", VolumeTarget.BLOCKS);
+        keyVolumeTargets.put("hostile", VolumeTarget.HOSTILE);
+        keyVolumeTargets.put("friendly", VolumeTarget.FRIENDLY);
+        keyVolumeTargets.put("player", VolumeTarget.PLAYER);
+        keyVolumeTargets.put("voice", VolumeTarget.VOICE);
     }
 
-    public static void resolveKeybinds() {
-        while(keys.get(0).isPressed()) { //listen for keypress
-            HotkeyClient.configScreen = new ConfigGui(); //open config screen
-            GuiBase.openGui(HotkeyClient.configScreen);
+    public static void resolveKeybinds(String keybind) {
+        if(keybind.equals(Config.OPEN_CONFIG.getKey())) {
+            MinecraftClient.getInstance().setScreen(HotkeyClient.CONFIG_SCREEN);
+        } else
+            switch(keybind.split("\\.")[keybind.split("\\.").length - 1]) {
+                case "mute" -> AudioLevels.toggleMute(getVolumeTarget(keybind));
+                case "up" -> AudioLevels.changeSoundLevel(getVolumeTarget(keybind), getLevelChange(keybind));
+                case "down" -> AudioLevels.changeSoundLevel(getVolumeTarget(keybind), -getLevelChange(keybind));
+            }
+    }
+
+    public static VolumeTarget getVolumeTarget(String keybind) {
+        String key = keybind.split("\\.")[keybind.split("\\.").length - 2];
+        if(!keyVolumeTargets.containsKey(key)) return null;
+        return keyVolumeTargets.get(key);
+    }
+
+    public static int getLevelChange(String keybind) {
+        int out = 0;
+
+        for(IntegerConfig e : Config.Lists.INTEGER_CONFIGS) {
+            if(getVolumeTarget(e.getKey()) == getVolumeTarget(keybind)) {
+                out = e.getInteger();
+            }
         }
+
+        return out;
     }
 }

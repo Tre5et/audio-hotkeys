@@ -1,240 +1,267 @@
 package net.treset.audio_hotkeys.config;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import fi.dy.masa.malilib.config.ConfigUtils;
-import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.config.IConfigHandler;
-import fi.dy.masa.malilib.config.options.ConfigHotkey;
-import fi.dy.masa.malilib.config.options.ConfigInteger;
-import fi.dy.masa.malilib.hotkeys.KeybindSettings;
-import net.treset.audio_hotkeys.HotkeyMod;
-import net.treset.audio_hotkeys.audiolevels.AudioLevels;
-import net.treset.audio_hotkeys.tools.FileTools;
-import net.treset.audio_hotkeys.tools.objects.ConfigVolumeHotkey;
-import net.treset.audio_hotkeys.tools.objects.ConfigVolumeInteger;
-import net.treset.audio_hotkeys.tools.objects.VolumeKeybindType;
-import net.treset.audio_hotkeys.tools.objects.VolumeTarget;
+import net.minecraft.client.MinecraftClient;
+import net.treset.audio_hotkeys.HotkeyClient;
+import net.treset.audio_hotkeys.tools.KeybindTools;
+import net.treset.vanillaconfig.config.IntegerConfig;
+import net.treset.vanillaconfig.config.KeybindConfig;
+import net.treset.vanillaconfig.config.PageConfig;
+import net.treset.vanillaconfig.config.base.BaseConfig;
+import net.treset.vanillaconfig.config.managers.SaveLoadManager;
+import net.treset.vanillaconfig.config.version.ConfigVersion;
+import net.treset.vanillaconfig.screen.ConfigScreen;
 
-import java.io.File;
-import java.util.List;
+public class Config {
 
-public class Config implements IConfigHandler {
+    public static final PageConfig MAIN_PAGE = new PageConfig("config.audiohotkeys.main.page");
+    public static final PageConfig MASTER_PAGE = new PageConfig("config.audiohotkeys.master.page");
+    public static final PageConfig MUSIC_PAGE = new PageConfig("config.audiohotkeys.music.page");
+    public static final PageConfig INGAME_PAGE = new PageConfig("config.audiohotkeys.ingame.page");
+    public static final PageConfig CREATURES_PAGE = new PageConfig("config.audiohotkeys.creatures.page");
+    public static final PageConfig OTHER_PAGE = new PageConfig("config.audiohotkeys.other.page");
 
-    public static final int CONFIG_VERSION = 0;
+    public static final KeybindConfig OPEN_CONFIG = new KeybindConfig(new int[]{21}, 0, 10, "config.audiohotkeys.open_config", "config.audiohotkeys.open_config.comment");
 
     public static class Master {
-        public static final ConfigVolumeHotkey TOGGLE_MUTE = new ConfigVolumeHotkey(new ConfigHotkey("Toggle Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for the entire Minecraft audio."), VolumeKeybindType.TOGGLE, VolumeTarget.MASTER);
-        public static final ConfigVolumeHotkey VOLUME_UP = new ConfigVolumeHotkey(new ConfigHotkey("Volume Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.MASTER);
-        public static final ConfigVolumeHotkey VOLUME_DOWN = new ConfigVolumeHotkey(new ConfigHotkey("Volume Down", "", KeybindSettings.PRESS_ALLOWEXTRA, "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.MASTER);
-        public static final ConfigVolumeInteger VOLUME_STEP = new ConfigVolumeInteger(new ConfigInteger("Volume Step", 5, "Amount the volume is increased / decreased in percent."), VolumeTarget.MASTER);
-        public static final ConfigVolumeHotkey SUBTITLES_TOGGLE = new ConfigVolumeHotkey(new ConfigHotkey("Toggle Subtitles", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle audio subtitles."), VolumeKeybindType.SUBTITLES, VolumeTarget.SUBTITLES);
+        public static final KeybindConfig MASTER_MUTE =     new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.master.mute",      "config.audiohotkeys.master.mute.comment");
+        public static final KeybindConfig MASTER_UP =       new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.master.up",        "config.audiohotkeys.master.up.comment");
+        public static final KeybindConfig MASTER_DOWN =     new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.master.down",      "config.audiohotkeys.master.down.comment");
+        public static final IntegerConfig MASTER_STEP =     new IntegerConfig(5, 1, 50,     "config.audiohotkeys.master.step",      "config.audiohotkeys.master.step.comment");
+        public static final KeybindConfig SUBTITLES_MUTE =  new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.subtitles.mute",   "config.audiohotkeys.subtitles.mute.comment");
 
-        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                TOGGLE_MUTE.hotkey,
-                VOLUME_UP.hotkey,
-                VOLUME_DOWN.hotkey,
-                VOLUME_STEP.integer,
-                SUBTITLES_TOGGLE.hotkey
-        );
+        public static final BaseConfig[] OPTIONS = new BaseConfig[] {
+                MASTER_MUTE,
+                MASTER_UP,
+                MASTER_DOWN,
+                MASTER_STEP,
+                SUBTITLES_MUTE
+        };
+
+        static {
+            MASTER_UP.setFullWidth(false);
+            MASTER_DOWN.setFullWidth(false);
+            MASTER_STEP.setSlider(true);
+        }
     }
 
     public static class Music {
-        public static final ConfigVolumeHotkey MUSIC_TOGGLE_MUTE = new ConfigVolumeHotkey( new ConfigHotkey("Toggle Music Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for music audio."), VolumeKeybindType.TOGGLE, VolumeTarget.MUSIC);
-        public static final ConfigVolumeHotkey MUSIC_VOLUME_UP = new ConfigVolumeHotkey( new ConfigHotkey("Volume Music Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.MUSIC);
-        public static final ConfigVolumeHotkey MUSIC_VOLUME_DOWN = new ConfigVolumeHotkey( new ConfigHotkey("Volume Music Down", "", KeybindSettings.PRESS_ALLOWEXTRA, "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.MUSIC);
-        public static final ConfigVolumeInteger MUSIC_VOLUME_STEP = new ConfigVolumeInteger( new ConfigInteger("Volume Music Step", 5,  "Amount the volume is increased / decreased in percent."), VolumeTarget.MUSIC);
-        public static final ConfigVolumeHotkey JUKEBOX_TOGGLE_MUTE = new ConfigVolumeHotkey( new ConfigHotkey("Toggle Jukebox/Note Blocks Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for Jukebox and Note Bock audio."), VolumeKeybindType.TOGGLE, VolumeTarget.JUKEBOX);
-        public static final ConfigVolumeHotkey JUKEBOX_VOLUME_UP = new ConfigVolumeHotkey( new ConfigHotkey("Volume Jukebox/Note Blocks Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.JUKEBOX);
-        public static final ConfigVolumeHotkey JUKEBOX_VOLUME_DOWN = new ConfigVolumeHotkey( new ConfigHotkey("Volume Jukebox/Note Blocks Down", "", KeybindSettings.PRESS_ALLOWEXTRA, "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.JUKEBOX);
-        public static final ConfigVolumeInteger JUKEBOX_VOLUME_STEP = new ConfigVolumeInteger( new ConfigInteger("Volume Jukebox/Note Blocks Step", 5, "Amount the volume is increased / decreased in percent."), VolumeTarget.JUKEBOX);
+        public static final KeybindConfig MUSIC_MUTE =      new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.music.mute",      "config.audiohotkeys.music.mute.comment");
+        public static final KeybindConfig MUSIC_UP =        new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.music.up",        "config.audiohotkeys.music.up.comment");
+        public static final KeybindConfig MUSIC_DOWN =      new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.music.down",      "config.audiohotkeys.music.down.comment");
+        public static final IntegerConfig MUSIC_STEP =      new IntegerConfig(5, 1, 50,     "config.audiohotkeys.music.step",      "config.audiohotkeys.music.step.comment");
+        public static final KeybindConfig JUKEBOX_MUTE =    new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.jukebox.mute",      "config.audiohotkeys.jukebox.mute.comment");
+        public static final KeybindConfig JUKEBOX_UP =      new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.jukebox.up",        "config.audiohotkeys.jukebox.up.comment");
+        public static final KeybindConfig JUKEBOX_DOWN =    new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.jukebox.down",      "config.audiohotkeys.jukebox.down.comment");
+        public static final IntegerConfig JUKEBOX_STEP =    new IntegerConfig(5, 1, 50,     "config.audiohotkeys.jukebox.step",      "config.audiohotkeys.jukebox.step.comment");
 
-        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                MUSIC_TOGGLE_MUTE.hotkey,
-                MUSIC_VOLUME_UP.hotkey,
-                MUSIC_VOLUME_DOWN.hotkey,
-                MUSIC_VOLUME_STEP.integer,
-                JUKEBOX_TOGGLE_MUTE.hotkey,
-                JUKEBOX_VOLUME_UP.hotkey,
-                JUKEBOX_VOLUME_DOWN.hotkey,
-                JUKEBOX_VOLUME_STEP.integer
-        );
+        public static final BaseConfig[] OPTIONS = new BaseConfig[] {
+                MUSIC_MUTE,
+                MUSIC_UP,
+                MUSIC_DOWN,
+                MUSIC_STEP,
+                JUKEBOX_MUTE,
+                JUKEBOX_UP,
+                JUKEBOX_DOWN,
+                JUKEBOX_STEP
+        };
+
+        static {
+            MUSIC_UP.setFullWidth(false);
+            MUSIC_DOWN.setFullWidth(false);
+            MUSIC_STEP.setSlider(true);
+            JUKEBOX_UP.setFullWidth(false);
+            JUKEBOX_DOWN.setFullWidth(false);
+            JUKEBOX_STEP.setSlider(true);
+        }
     }
 
     public static class Ingame {
-        public static final ConfigVolumeHotkey ENVIRONMENT_TOGGLE_MUTE = new ConfigVolumeHotkey( new ConfigHotkey("Toggle Environment Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for environment audio."), VolumeKeybindType.TOGGLE, VolumeTarget.ENVIRONMENT);
-        public static final ConfigVolumeHotkey ENVIRONMENT_VOLUME_UP = new ConfigVolumeHotkey( new ConfigHotkey("Volume Environment Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.ENVIRONMENT);
-        public static final ConfigVolumeHotkey ENVIRONMENT_VOLUME_DOWN = new ConfigVolumeHotkey(  new ConfigHotkey("Volume Environment Down", "", KeybindSettings.PRESS_ALLOWEXTRA, "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.ENVIRONMENT);
-        public static final ConfigVolumeInteger ENVIRONMENT_VOLUME_STEP = new ConfigVolumeInteger( new ConfigInteger("Volume Environment Step", 5,  "Amount the volume is increased / decreased in percent."), VolumeTarget.ENVIRONMENT);
-        public static final ConfigVolumeHotkey WEATHER_TOGGLE_MUTE = new ConfigVolumeHotkey(  new ConfigHotkey("Toggle Weather Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for weather audio."), VolumeKeybindType.TOGGLE, VolumeTarget.WEATHER);
-        public static final ConfigVolumeHotkey WEATHER_VOLUME_UP = new ConfigVolumeHotkey(  new ConfigHotkey("Volume Weather Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.WEATHER);
-        public static final ConfigVolumeHotkey WEATHER_VOLUME_DOWN = new ConfigVolumeHotkey(  new ConfigHotkey("Volume Weather Down", "", KeybindSettings.PRESS_ALLOWEXTRA, "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.WEATHER);
-        public static final ConfigVolumeInteger WEATHER_VOLUME_STEP = new ConfigVolumeInteger( new ConfigInteger("Volume Weather Step", 5, "Amount the volume is increased / decreased in percent."), VolumeTarget.WEATHER);
-        public static final ConfigVolumeHotkey BLOCKS_TOGGLE_MUTE = new ConfigVolumeHotkey(  new ConfigHotkey("Toggle Blocks Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for block audio."), VolumeKeybindType.TOGGLE, VolumeTarget.BLOCKS);
-        public static final ConfigVolumeHotkey BLOCKS_VOLUME_UP = new ConfigVolumeHotkey(  new ConfigHotkey("Volume Blocks Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.BLOCKS);
-        public static final ConfigVolumeHotkey BLOCKS_VOLUME_DOWN = new ConfigVolumeHotkey(  new ConfigHotkey("Volume Blocks Down", "", KeybindSettings.PRESS_ALLOWEXTRA, "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.BLOCKS);
-        public static final ConfigVolumeInteger BLOCKS_VOLUME_STEP = new ConfigVolumeInteger( new ConfigInteger("Volume Blocks Step", 5, "Amount the volume is increased / decreased in percent."), VolumeTarget.BLOCKS);
+        public static final KeybindConfig ENVIRONMENT_MUTE= new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.environment.mute",      "config.audiohotkeys.environment.mute.comment");
+        public static final KeybindConfig ENVIRONMENT_UP =  new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.environment.up",        "config.audiohotkeys.environment.up.comment");
+        public static final KeybindConfig ENVIRONMENT_DOWN= new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.environment.down",      "config.audiohotkeys.environment.down.comment");
+        public static final IntegerConfig ENVIRONMENT_STEP= new IntegerConfig(5, 1, 50,     "config.audiohotkeys.environment.step",      "config.audiohotkeys.environment.step.comment");
+        public static final KeybindConfig WEATHER_MUTE =    new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.weather.mute",      "config.audiohotkeys.weather.mute.comment");
+        public static final KeybindConfig WEATHER_UP =      new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.weather.up",        "config.audiohotkeys.weather.up.comment");
+        public static final KeybindConfig WEATHER_DOWN =    new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.weather.down",      "config.audiohotkeys.weather.down.comment");
+        public static final IntegerConfig WEATHER_STEP =    new IntegerConfig(5, 1, 50,     "config.audiohotkeys.weather.step",      "config.audiohotkeys.weather.step.comment");
+        public static final KeybindConfig BLOCKS_MUTE =     new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.blocks.mute",      "config.audiohotkeys.blocks.mute.comment");
+        public static final KeybindConfig BLOCKS_UP =       new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.blocks.up",        "config.audiohotkeys.blocks.up.comment");
+        public static final KeybindConfig BLOCKS_DOWN =     new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.blocks.down",      "config.audiohotkeys.blocks.down.comment");
+        public static final IntegerConfig BLOCKS_STEP =     new IntegerConfig(5, 1, 50,     "config.audiohotkeys.blocks.step",      "config.audiohotkeys.blocks.step.comment");
 
-        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                ENVIRONMENT_TOGGLE_MUTE.hotkey,
-                ENVIRONMENT_VOLUME_UP.hotkey,
-                ENVIRONMENT_VOLUME_DOWN.hotkey,
-                ENVIRONMENT_VOLUME_STEP.integer,
-                WEATHER_TOGGLE_MUTE.hotkey,
-                WEATHER_VOLUME_UP.hotkey,
-                WEATHER_VOLUME_DOWN.hotkey,
-                WEATHER_VOLUME_STEP.integer,
-                BLOCKS_TOGGLE_MUTE.hotkey,
-                BLOCKS_VOLUME_UP.hotkey,
-                BLOCKS_VOLUME_DOWN.hotkey,
-                BLOCKS_VOLUME_STEP.integer
-        );
+        public static final BaseConfig[] OPTIONS = new BaseConfig[] {
+                ENVIRONMENT_MUTE,
+                ENVIRONMENT_UP,
+                ENVIRONMENT_DOWN,
+                ENVIRONMENT_STEP,
+                WEATHER_MUTE,
+                WEATHER_UP,
+                WEATHER_DOWN,
+                WEATHER_STEP,
+                BLOCKS_MUTE,
+                BLOCKS_UP,
+                BLOCKS_DOWN,
+                BLOCKS_STEP
+        };
+
+        static {
+            ENVIRONMENT_UP.setFullWidth(false);
+            ENVIRONMENT_DOWN.setFullWidth(false);
+            ENVIRONMENT_STEP.setSlider(true);
+            WEATHER_UP.setFullWidth(false);
+            WEATHER_DOWN.setFullWidth(false);
+            WEATHER_STEP.setSlider(true);
+            BLOCKS_UP.setFullWidth(false);
+            BLOCKS_DOWN.setFullWidth(false);
+            BLOCKS_STEP.setSlider(true);
+        }
     }
 
     public static class Creatures {
-        public static final ConfigVolumeHotkey HOSTILE_TOGGLE_MUTE = new ConfigVolumeHotkey( new ConfigHotkey("Toggle Hostile Mobs Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for hostile mobs."), VolumeKeybindType.TOGGLE, VolumeTarget.HOSTILE);
-        public static final ConfigVolumeHotkey HOSTILE_VOLUME_UP = new ConfigVolumeHotkey( new ConfigHotkey("Volume Hostile Mobs Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.HOSTILE);
-        public static final ConfigVolumeHotkey HOSTILE_VOLUME_DOWN = new ConfigVolumeHotkey( new ConfigHotkey("Volume Hostile Mobs Down", "", KeybindSettings.PRESS_ALLOWEXTRA, "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.HOSTILE);
-        public static final ConfigVolumeInteger HOSTILE_VOLUME_STEP = new ConfigVolumeInteger( new ConfigInteger("Volume Hostile Mobs Step", 5, "Amount the volume is increased / decreased in percent."), VolumeTarget.HOSTILE);
-        public static final ConfigVolumeHotkey FRIENDLY_TOGGLE_MUTE = new ConfigVolumeHotkey( new ConfigHotkey("Toggle Friendly Mobs Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for friendly mobs."), VolumeKeybindType.TOGGLE, VolumeTarget.FRIENDLY);
-        public static final ConfigVolumeHotkey FRIENDLY_VOLUME_UP = new ConfigVolumeHotkey( new ConfigHotkey("Volume Friendly Mobs Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.FRIENDLY);
-        public static final ConfigVolumeHotkey FRIENDLY_VOLUME_DOWN = new ConfigVolumeHotkey( new ConfigHotkey("Volume Friendly Mobs Down", "", KeybindSettings.PRESS_ALLOWEXTRA, "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.FRIENDLY);
-        public static final ConfigVolumeInteger FRIENDLY_VOLUME_STEP = new ConfigVolumeInteger( new ConfigInteger("Volume Friendly Mobs Step", 5, "Amount the volume is increased / decreased in percent."), VolumeTarget.FRIENDLY);
-        public static final ConfigVolumeHotkey PLAYER_TOGGLE_MUTE = new ConfigVolumeHotkey( new ConfigHotkey("Toggle Players Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for players."), VolumeKeybindType.TOGGLE, VolumeTarget.PLAYER);
-        public static final ConfigVolumeHotkey PLAYER_VOLUME_UP = new ConfigVolumeHotkey( new ConfigHotkey("Volume Players Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.PLAYER);
-        public static final ConfigVolumeHotkey PLAYER_VOLUME_DOWN = new ConfigVolumeHotkey( new ConfigHotkey("Volume Players Down", "", KeybindSettings.PRESS_ALLOWEXTRA,  "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.PLAYER);
-        public static final ConfigVolumeInteger PLAYER_VOLUME_STEP = new ConfigVolumeInteger( new ConfigInteger("Volume Players Step", 5, "Amount the volume is increased / decreased in percent."), VolumeTarget.PLAYER);
+        public static final KeybindConfig HOSTILE_MUTE =    new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.hostile.mute",      "config.audiohotkeys.hostile.mute.comment");
+        public static final KeybindConfig HOSTILE_UP =      new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.hostile.up",        "config.audiohotkeys.hostile.up.comment");
+        public static final KeybindConfig HOSTILE_DOWN =    new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.hostile.down",      "config.audiohotkeys.hostile.down.comment");
+        public static final IntegerConfig HOSTILE_STEP =    new IntegerConfig(5, 1, 50,     "config.audiohotkeys.hostile.step",      "config.audiohotkeys.hostile.step.comment");
+        public static final KeybindConfig FRIENDLY_MUTE =   new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.friendly.mute",      "config.audiohotkeys.friendly.mute.comment");
+        public static final KeybindConfig FRIENDLY_UP =     new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.friendly.up",        "config.audiohotkeys.friendly.up.comment");
+        public static final KeybindConfig FRIENDLY_DOWN =   new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.friendly.down",      "config.audiohotkeys.friendly.down.comment");
+        public static final IntegerConfig FRIENDLY_STEP =   new IntegerConfig(5, 1, 50,     "config.audiohotkeys.friendly.step",      "config.audiohotkeys.friendly.step.comment");
+        public static final KeybindConfig PLAYER_MUTE =     new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.player.mute",      "config.audiohotkeys.player.mute.comment");
+        public static final KeybindConfig PLAYER_UP =       new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.player.up",        "config.audiohotkeys.player.up.comment");
+        public static final KeybindConfig PLAYER_DOWN =     new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.player.down",      "config.audiohotkeys.player.down.comment");
+        public static final IntegerConfig PLAYER_STEP =     new IntegerConfig(5, 1, 50,     "config.audiohotkeys.player.step",      "config.audiohotkeys.player.step.comment");
 
-        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                HOSTILE_TOGGLE_MUTE.hotkey,
-                HOSTILE_VOLUME_UP.hotkey,
-                HOSTILE_VOLUME_DOWN.hotkey,
-                HOSTILE_VOLUME_STEP.integer,
-                FRIENDLY_TOGGLE_MUTE.hotkey,
-                FRIENDLY_VOLUME_UP.hotkey,
-                FRIENDLY_VOLUME_DOWN.hotkey,
-                FRIENDLY_VOLUME_STEP.integer,
-                PLAYER_TOGGLE_MUTE.hotkey,
-                PLAYER_VOLUME_UP.hotkey,
-                PLAYER_VOLUME_DOWN.hotkey,
-                PLAYER_VOLUME_STEP.integer
-        );
+        public static final BaseConfig[] OPTIONS = new BaseConfig[] {
+                HOSTILE_MUTE,
+                HOSTILE_UP,
+                HOSTILE_DOWN,
+                HOSTILE_STEP,
+                FRIENDLY_MUTE,
+                FRIENDLY_UP,
+                FRIENDLY_DOWN,
+                FRIENDLY_STEP,
+                PLAYER_MUTE,
+                PLAYER_UP,
+                PLAYER_DOWN,
+                PLAYER_STEP
+        };
+
+        static {
+            HOSTILE_UP.setFullWidth(false);
+            HOSTILE_DOWN.setFullWidth(false);
+            HOSTILE_STEP.setSlider(true);
+            FRIENDLY_UP.setFullWidth(false);
+            FRIENDLY_DOWN.setFullWidth(false);
+            FRIENDLY_STEP.setSlider(true);
+            PLAYER_UP.setFullWidth(false);
+            PLAYER_DOWN.setFullWidth(false);
+            PLAYER_STEP.setSlider(true);
+        }
     }
 
     public static class Other {
-        public static final ConfigVolumeHotkey VOICE_TOGGLE_MUTE = new ConfigVolumeHotkey( new ConfigHotkey("Toggle Voice Mute", "", KeybindSettings.PRESS_ALLOWEXTRA, "Toggle mute for voice audio."), VolumeKeybindType.TOGGLE, VolumeTarget.VOICE);
-        public static final ConfigVolumeHotkey VOICE_VOLUME_UP = new ConfigVolumeHotkey( new ConfigHotkey("Volume Voice Up", "", KeybindSettings.PRESS_ALLOWEXTRA, "Increase the volume by amount specified in Volume Step."), VolumeKeybindType.UP, VolumeTarget.VOICE);
-        public static final ConfigVolumeHotkey VOICE_VOLUME_DOWN = new ConfigVolumeHotkey( new ConfigHotkey("Volume Voice Down", "", KeybindSettings.PRESS_ALLOWEXTRA, "Decrease the volume by amount specified in Volume Step."), VolumeKeybindType.DOWN, VolumeTarget.VOICE);
-        public static final ConfigVolumeInteger VOICE_VOLUME_STEP = new ConfigVolumeInteger( new ConfigInteger("Volume Voice Step", 5, "Amount the volume is increased / decreased in percent."), VolumeTarget.VOICE);
+        public static final KeybindConfig VOICE_MUTE =      new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.voice.mute",      "config.audiohotkeys.voice.mute.comment");
+        public static final KeybindConfig VOICE_UP =        new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.voice.up",        "config.audiohotkeys.voice.up.comment");
+        public static final KeybindConfig VOICE_DOWN =      new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.voice.down",      "config.audiohotkeys.voice.down.comment");
+        public static final IntegerConfig VOICE_STEP =      new IntegerConfig(5, 1, 50,     "config.audiohotkeys.voice.step",      "config.audiohotkeys.voice.step.comment");
 
-        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-          VOICE_TOGGLE_MUTE.hotkey,
-          VOICE_VOLUME_UP.hotkey,
-          VOICE_VOLUME_DOWN.hotkey,
-          VOICE_VOLUME_STEP.integer
-        );
-    }
+        public static final BaseConfig[] OPTIONS = new BaseConfig[]{
+                VOICE_MUTE,
+                VOICE_UP,
+                VOICE_DOWN,
+                VOICE_STEP
+        };
 
-    public static final List<ConfigVolumeHotkey> VOLUME_HOTKEYS = ImmutableList.of(
-            Master.TOGGLE_MUTE,
-            Master.VOLUME_UP,
-            Master.VOLUME_DOWN,
-            Master.SUBTITLES_TOGGLE,
-
-            Music.MUSIC_TOGGLE_MUTE,
-            Music.MUSIC_VOLUME_UP,
-            Music.MUSIC_VOLUME_DOWN,
-            Music.JUKEBOX_TOGGLE_MUTE,
-            Music.JUKEBOX_VOLUME_UP,
-            Music.JUKEBOX_VOLUME_DOWN,
-
-            Ingame.ENVIRONMENT_TOGGLE_MUTE,
-            Ingame.ENVIRONMENT_VOLUME_UP,
-            Ingame.ENVIRONMENT_VOLUME_DOWN,
-            Ingame.WEATHER_TOGGLE_MUTE,
-            Ingame.WEATHER_VOLUME_UP,
-            Ingame.WEATHER_VOLUME_DOWN,
-            Ingame.BLOCKS_TOGGLE_MUTE,
-            Ingame.BLOCKS_VOLUME_UP,
-            Ingame.WEATHER_VOLUME_DOWN,
-
-            Creatures.HOSTILE_TOGGLE_MUTE,
-            Creatures.HOSTILE_VOLUME_UP,
-            Creatures.HOSTILE_VOLUME_DOWN,
-            Creatures.FRIENDLY_TOGGLE_MUTE,
-            Creatures.FRIENDLY_VOLUME_UP,
-            Creatures.FRIENDLY_VOLUME_DOWN,
-            Creatures.PLAYER_TOGGLE_MUTE,
-            Creatures.PLAYER_VOLUME_UP,
-            Creatures.PLAYER_VOLUME_DOWN,
-
-            Other.VOICE_TOGGLE_MUTE,
-            Other.VOICE_VOLUME_UP,
-            Other.VOICE_VOLUME_DOWN
-    );
-
-    public static List<ConfigVolumeInteger> VOLUME_STEPS = ImmutableList.of(
-            Master.VOLUME_STEP,
-
-            Music.MUSIC_VOLUME_STEP,
-            Music.JUKEBOX_VOLUME_STEP,
-
-            Ingame.ENVIRONMENT_VOLUME_STEP,
-            Ingame.WEATHER_VOLUME_STEP,
-            Ingame.BLOCKS_VOLUME_STEP,
-
-            Creatures.HOSTILE_VOLUME_STEP,
-            Creatures.FRIENDLY_VOLUME_STEP,
-            Creatures.PLAYER_VOLUME_STEP,
-
-            Other.VOICE_VOLUME_STEP
-    );
-
-    public static void loadFromFile() {
-        File configFile = new File(HotkeyMod.CONFIG_DIR, HotkeyMod.CONFIG_FILE_NAME);
-
-        if (configFile.exists() && configFile.isFile() && configFile.canRead()) { //does file exist and is readable
-
-            JsonObject obj;
-            if ((obj = FileTools.readJsonFile(configFile)) != null) { //read file
-                ConfigUtils.readConfigBase(obj, "Master", Config.Master.OPTIONS);
-                ConfigUtils.readConfigBase(obj, "Music", Config.Music.OPTIONS);
-                ConfigUtils.readConfigBase(obj, "Ingame", Ingame.OPTIONS);
-                ConfigUtils.readConfigBase(obj, "Creatures", Config.Creatures.OPTIONS);
-                ConfigUtils.readConfigBase(obj, "Other", Config.Other.OPTIONS);
-
-            }
+        static {
+            VOICE_UP.setFullWidth(false);
+            VOICE_DOWN.setFullWidth(false);
+            VOICE_STEP.setSlider(true);
         }
     }
 
-    public static void saveToFile() {
-        File dir = HotkeyMod.CONFIG_DIR;
+    public static class Lists {
+        public static final KeybindConfig[] KEYBIND_CONFIGS = new KeybindConfig[] {
+                OPEN_CONFIG,
+                Master.MASTER_MUTE,
+                Master.MASTER_UP,
+                Master.MASTER_DOWN,
+                Master.SUBTITLES_MUTE,
+                Music.MUSIC_MUTE,
+                Music.MUSIC_UP,
+                Music.MUSIC_DOWN,
+                Music.JUKEBOX_MUTE,
+                Music.JUKEBOX_UP,
+                Music.JUKEBOX_DOWN,
+                Ingame.ENVIRONMENT_MUTE,
+                Ingame.ENVIRONMENT_UP,
+                Ingame.ENVIRONMENT_DOWN,
+                Ingame.WEATHER_MUTE,
+                Ingame.WEATHER_UP,
+                Ingame.WEATHER_DOWN,
+                Ingame.BLOCKS_MUTE,
+                Ingame.BLOCKS_UP,
+                Ingame.BLOCKS_DOWN,
+                Creatures.HOSTILE_MUTE,
+                Creatures.HOSTILE_UP,
+                Creatures.HOSTILE_DOWN,
+                Creatures.FRIENDLY_MUTE,
+                Creatures.FRIENDLY_UP,
+                Creatures.FRIENDLY_DOWN,
+                Creatures.PLAYER_MUTE,
+                Creatures.PLAYER_UP,
+                Creatures.PLAYER_DOWN,
+                Other.VOICE_MUTE,
+                Other.VOICE_UP,
+                Other.VOICE_DOWN,
+        };
 
-        if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) { //does config dir exist or create it
+        public static final IntegerConfig[] INTEGER_CONFIGS = new IntegerConfig[] {
+                Master.MASTER_STEP,
+                Music.MUSIC_STEP,
+                Music.JUKEBOX_STEP,
+                Ingame.ENVIRONMENT_STEP,
+                Ingame.WEATHER_STEP,
+                Ingame.BLOCKS_STEP,
+                Creatures.HOSTILE_STEP,
+                Creatures.FRIENDLY_STEP,
+                Creatures.PLAYER_STEP,
+                Other.VOICE_STEP
+        };
+    }
 
-            JsonObject obj = new JsonObject();
+    public static void init() {
+        MAIN_PAGE.setOptions(new BaseConfig[]{
+                MASTER_PAGE,
+                MUSIC_PAGE,
+                INGAME_PAGE,
+                CREATURES_PAGE,
+                OTHER_PAGE,
+                OPEN_CONFIG
+        });
 
-            ConfigUtils.writeConfigBase(obj, "Master", Config.Master.OPTIONS);
-            ConfigUtils.writeConfigBase(obj, "Music", Config.Music.OPTIONS);
-            ConfigUtils.writeConfigBase(obj, "Ingame", Ingame.OPTIONS);
-            ConfigUtils.writeConfigBase(obj, "Creatures", Config.Creatures.OPTIONS);
-            ConfigUtils.writeConfigBase(obj, "Other", Config.Other.OPTIONS);
-            obj.add("config_version", new JsonPrimitive(CONFIG_VERSION)); //add config file version option
+        MASTER_PAGE.setOptions(Master.OPTIONS);
+        MUSIC_PAGE.setOptions(Music.OPTIONS);
+        INGAME_PAGE.setOptions(Ingame.OPTIONS);
+        CREATURES_PAGE.setOptions(Creatures.OPTIONS);
+        OTHER_PAGE.setOptions(Other.OPTIONS);
 
-            FileTools.writeJsonToFile(obj, new File(dir, HotkeyMod.CONFIG_FILE_NAME)); //write file
+        for(int i = 0; i < Lists.KEYBIND_CONFIGS.length; i++) {
+            Lists.KEYBIND_CONFIGS[i].onPressed(KeybindTools::resolveKeybinds);
         }
-    }
 
-    @Override
-    public void load() {
-        loadFromFile();
-        AudioLevels.loadSavedLevels();
-    }
+        MAIN_PAGE.setSaveName("audio_hotkeys");
+        MAIN_PAGE.setPath("audio_hotkeys");
 
-    @Override
-    public void save() {
-        saveToFile();
-        AudioLevels.saveLevels();
+        MAIN_PAGE.loadVersion();
+
+        if(!MAIN_PAGE.hasVersion()) MalilibMigration.migrateFromMalilib();
+
+        States.init();
+
+        MAIN_PAGE.setVersion(new ConfigVersion("1.0.0"));
+
+        SaveLoadManager.globalSaveConfig(MAIN_PAGE);
+
+        HotkeyClient.CONFIG_SCREEN = new ConfigScreen(MAIN_PAGE, MinecraftClient.getInstance().currentScreen);
     }
 }
