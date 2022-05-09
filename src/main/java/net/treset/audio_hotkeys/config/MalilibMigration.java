@@ -247,7 +247,7 @@ public class MalilibMigration {
     }
 
     public static void migrateFromMalilib() {
-        loadOpenHotkey();
+        if(!GLFW.glfwInit()) return;
 
         File olfFile = new File("./config/audio_hotkeys/audio_hotkeys.json");
         if(!FileTools.fileExists(olfFile)) return;
@@ -270,6 +270,8 @@ public class MalilibMigration {
                 }
             }
         }
+
+        loadOpenHotkey();
 
         if(!FileTools.writeJsonToFile(config, new File("./config/audio_hotkeys/audio_hotkeys_tmp.json"))) return;
 
@@ -300,10 +302,13 @@ public class MalilibMigration {
                         }
                         if(key == null) return;
 
-                        if(!GLFW.glfwInit()) return;
-
                         int keyCode = key.getCode();
-                        int scanCode = GLFW.glfwGetKeyScancode(keyCode);
+                        int scanCode = -1;
+                        try {
+                            scanCode = GLFW.glfwGetKeyScancode(keyCode);
+                        } catch (IllegalStateException e) {
+                            return;
+                        }
 
                         if(scanCode <= 0) return;
 
@@ -312,6 +317,7 @@ public class MalilibMigration {
                         break;
                     }
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -335,7 +341,9 @@ public class MalilibMigration {
             String[] singleKeys = keys.split(",");
             scanKeys = new int[singleKeys.length];
             for (int i = 0; i < scanKeys.length; i++) {
-                scanKeys[i] = GLFW.glfwGetKeyScancode(Keys.getKeyCodeFromName(singleKeys[i]));
+                try {
+                    scanKeys[i] = GLFW.glfwGetKeyScancode(Keys.getKeyCodeFromName(singleKeys[i]));
+                } catch (IllegalStateException e) { return obj; }
             }
         } else {
             scanKeys = new int[]{};
