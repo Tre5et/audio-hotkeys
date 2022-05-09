@@ -1,6 +1,6 @@
 # Audio Hotkeys by TreSet
 
-![Master Volume mute message.](https://github.com/Tre5et/audio-hotkeys/blob/1.18/banner.png)
+![Master Volume mute message.](https://github.com/Tre5et/audio-hotkeys/raw/1.18/banner.png)
 
 ## Description
 
