@@ -20,7 +20,7 @@ public class Config {
     public static final PageConfig CREATURES_PAGE = new PageConfig("config.audiohotkeys.creatures.page");
     public static final PageConfig OTHER_PAGE = new PageConfig("config.audiohotkeys.other.page");
 
-    public static final KeybindConfig OPEN_CONFIG = new KeybindConfig(new int[]{21}, 0, 10, "config.audiohotkeys.open_config", "config.audiohotkeys.open_config.comment");
+    public static final KeybindConfig OPEN_CONFIG = new KeybindConfig(new int[]{0x18 /*O*/}, 0, 10, "config.audiohotkeys.open_config", "config.audiohotkeys.open_config.comment");
 
     public static class Master {
         public static final KeybindConfig MASTER_MUTE =     new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.master.mute",      "config.audiohotkeys.master.mute.comment");
