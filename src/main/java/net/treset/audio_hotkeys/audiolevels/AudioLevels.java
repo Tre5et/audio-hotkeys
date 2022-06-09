@@ -75,8 +75,8 @@ public class AudioLevels {
 
         setMute(States.SUBTITLES, !States.SUBTITLES.muted);
 
-        opt.showSubtitles = !States.SUBTITLES.muted;
-        if(opt.showSubtitles) {
+        opt.getShowSubtitles().setValue(!States.SUBTITLES.muted);
+        if(opt.getShowSubtitles().getValue()) {
             OverlayManager.drawOverlay(new AudioOverlay(String.format(TextTools.translateOrDefault("string.audiohotkeys.activate"), TextTools.translateOrDefault(States.SUBTITLES.name)), TextureCoordinate.UNMUTE, 2000));
         } else {
             OverlayManager.drawOverlay(new AudioOverlay(String.format(TextTools.translateOrDefault("string.audiohotkeys.deactivate"), TextTools.translateOrDefault(States.SUBTITLES.name)), TextureCoordinate.MUTE, 2000));
