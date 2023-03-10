@@ -86,15 +86,15 @@ public class AudioLevels {
     public static void setSoundLevel(AudioState m, int value) {
         if((opt = MinecraftClient.getInstance().options) == null) return;
 
-        float targetVolume = MathTools.clamp((float)value / 100, 0, 1);
-        opt.setSoundVolume(m.target.getCategory(), targetVolume);
+        double targetVolume = MathTools.clamp((float)value / 100, 0, 1);
+        opt.getSoundVolumeOption(m.target.getCategory()).setValue(targetVolume);
     }
 
     public static void updateSoundLevels() {
         if(opt == null) opt = MinecraftClient.getInstance().options;
 
         for(AudioState e : States.STATES) {
-            if(!e.muted && opt != null) {
+            if(e != States.SUBTITLES && !e.muted && opt != null) {
                 setUnmuteVolume(e, (int)(opt.getSoundVolume(e.target.getCategory()) * 100));
             }
         }
