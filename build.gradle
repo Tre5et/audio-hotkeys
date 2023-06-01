@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.1-SNAPSHOT'
+	id 'fabric-loom' version '1.2-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -15,6 +15,10 @@ repositories {
 
 	maven { url 'https://maven.terraformersmc.com/releases/' }
 	maven { url 'https://raw.githubusercontent.com/Tre5et/maven/main/' }
+
+	flatDir {
+		dirs 'run/mods'
+	}
 
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because

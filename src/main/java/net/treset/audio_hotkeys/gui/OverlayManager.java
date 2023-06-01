@@ -1,9 +1,7 @@
 package net.treset.audio_hotkeys.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.treset.audio_hotkeys.HotkeyMod;
@@ -35,11 +33,10 @@ public class OverlayManager {
         shouldRender = false;
     }
 
-    public static void renderOverlay(MatrixStack matrices) {
+    public static void renderOverlay(DrawContext ctx) {
         if(!shouldRender || renderOverlay == null) return;
 
-        RenderSystem.setShaderTexture(0, SPRITESHEET);
-        DrawableHelper.drawTexture(matrices, 5, 5, renderOverlay.coordinate.getCoordinates()[0], renderOverlay.coordinate.getCoordinates()[1], 24, 24, 48, 48);
-        DrawableHelper.drawTextWithShadow(matrices, MinecraftClient.getInstance().textRenderer, Text.of(TextTools.translateOrDefault(renderOverlay.text)), 31, 13, 0xffffff);
+        ctx.drawTexture(SPRITESHEET, 5, 5, renderOverlay.coordinate.getCoordinates()[0], renderOverlay.coordinate.getCoordinates()[1], 24, 24, 48, 48);
+        ctx.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, Text.of(TextTools.translateOrDefault(renderOverlay.text)), 31, 13, 0xffffff);
     }
 }
