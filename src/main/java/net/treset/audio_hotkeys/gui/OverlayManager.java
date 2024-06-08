@@ -14,7 +14,7 @@ public class OverlayManager {
     public static AudioOverlay renderOverlay;
     public static boolean shouldRender = false;
     public static CompletableFuture<Void> activeKeeper;
-    private static final Identifier SPRITESHEET = new Identifier(HotkeyMod.MOD_ID, "textures/gui/speaker.png");
+    private static final Identifier SPRITESHEET = Identifier.of(HotkeyMod.MOD_ID, "textures/gui/speaker.png");
 
     public static void drawOverlay(AudioOverlay ol) {
         if(activeKeeper != null) activeKeeper.cancel(true);
