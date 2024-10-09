@@ -2,6 +2,7 @@ package net.treset.audio_hotkeys.gui;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.treset.audio_hotkeys.HotkeyMod;
@@ -36,7 +37,7 @@ public class OverlayManager {
     public static void renderOverlay(DrawContext ctx) {
         if(!shouldRender || renderOverlay == null) return;
 
-        ctx.drawTexture(SPRITESHEET, 5, 5, renderOverlay.coordinate.getCoordinates()[0], renderOverlay.coordinate.getCoordinates()[1], 24, 24, 48, 48);
+        ctx.drawTexture(RenderLayer::getGuiTextured, SPRITESHEET, 5, 5, renderOverlay.coordinate.getCoordinates()[0], renderOverlay.coordinate.getCoordinates()[1], 24, 24, 48, 48);
         ctx.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, Text.of(TextTools.translateOrDefault(renderOverlay.text)), 31, 13, 0xffffff);
     }
 }
