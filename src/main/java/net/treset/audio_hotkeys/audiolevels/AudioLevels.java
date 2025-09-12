@@ -95,7 +95,7 @@ public class AudioLevels {
 
         for(AudioState e : States.STATES) {
             if(e != States.SUBTITLES && !e.muted && opt != null) {
-                setUnmuteVolume(e, (int)(opt.getSoundVolume(e.target.getCategory()) * 100));
+                setUnmuteVolume(e, (int)(opt.getCategorySoundVolume(e.target.getCategory()) * 100));
             }
         }
 
