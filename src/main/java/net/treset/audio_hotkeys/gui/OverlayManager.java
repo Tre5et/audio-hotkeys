@@ -36,7 +36,7 @@ public class OverlayManager {
     }
 
     public static void renderOverlay(DrawContext ctx) {
-        if(!shouldRender || renderOverlay == null) return;
+        if(!shouldRender || renderOverlay == null || MinecraftClient.getInstance().options.hudHidden) return;
 
         ctx.drawTexture(RenderPipelines.GUI_TEXTURED, SPRITESHEET, 5, 5, renderOverlay.coordinate.getCoordinates()[0], renderOverlay.coordinate.getCoordinates()[1], 24, 24, 48, 48);
         ctx.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, Text.of(TextTools.translateOrDefault(renderOverlay.text)), 31, 13, ColorHelper.fromAbgr(0xFFFFFFFF));
