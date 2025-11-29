@@ -29,7 +29,7 @@ public class KeybindTools {
 
     public static void resolveKeybinds(String keybind) {
         if(keybind.equals(Config.OPEN_CONFIG.getKey())) {
-            MinecraftClient.getInstance().setScreen(HotkeyClient.CONFIG_SCREEN);
+            MinecraftClient.getInstance().setScreen(HotkeyClient.getConfigScreen());
         } else
             switch(keybind.split("\\.")[keybind.split("\\.").length - 1]) {
                 case "mute" -> AudioLevels.toggleMute(getVolumeTarget(keybind));

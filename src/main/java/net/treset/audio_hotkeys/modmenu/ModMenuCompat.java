@@ -7,6 +7,6 @@ import net.treset.audio_hotkeys.HotkeyClient;
 public class ModMenuCompat implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() { //set config screen as modmenu options
-        return (screen) -> HotkeyClient.CONFIG_SCREEN;
+        return (screen) -> HotkeyClient.getConfigScreen();
     }
 }

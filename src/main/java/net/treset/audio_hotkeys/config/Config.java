@@ -1,7 +1,5 @@
 package net.treset.audio_hotkeys.config;
 
-import net.minecraft.client.MinecraftClient;
-import net.treset.audio_hotkeys.HotkeyClient;
 import net.treset.audio_hotkeys.tools.KeybindTools;
 import net.treset.vanillaconfig.config.IntegerConfig;
 import net.treset.vanillaconfig.config.KeybindConfig;
@@ -9,7 +7,6 @@ import net.treset.vanillaconfig.config.PageConfig;
 import net.treset.vanillaconfig.config.base.BaseConfig;
 import net.treset.vanillaconfig.config.managers.SaveLoadManager;
 import net.treset.vanillaconfig.config.version.ConfigVersion;
-import net.treset.vanillaconfig.screen.ConfigScreen;
 
 public class Config {
 
@@ -261,7 +258,5 @@ public class Config {
         MAIN_PAGE.setVersion(new ConfigVersion("1.0.0"));
 
         SaveLoadManager.globalSaveConfig(MAIN_PAGE);
-
-        HotkeyClient.CONFIG_SCREEN = new ConfigScreen(MAIN_PAGE, MinecraftClient.getInstance().currentScreen);
     }
 }
