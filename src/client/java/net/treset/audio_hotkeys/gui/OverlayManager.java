@@ -32,7 +32,7 @@ public class OverlayManager {
     }
 
     public static void renderOverlay(GuiGraphicsExtractor ctx) {
-        if(!shouldRender || renderOverlay == null || Minecraft.getInstance().options.hideGui) return;
+        if(!shouldRender || renderOverlay == null || Minecraft.getInstance().gui.hud.isHidden()) return;
 
         ctx.blitSprite(RenderPipelines.GUI_TEXTURED, renderOverlay.sprite.getIdentifier(), 5, 5, 24, 24);
         ctx.text(Minecraft.getInstance().font, Component.literal(TextTools.translateOrDefault(renderOverlay.text)), 31, 13, 0xFFFFFFFF);
