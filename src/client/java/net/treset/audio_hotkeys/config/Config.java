@@ -1,5 +1,6 @@
 package net.treset.audio_hotkeys.config;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.treset.audio_hotkeys.tools.KeybindTools;
 import net.treset.vanillaconfig.config.IntegerConfig;
 import net.treset.vanillaconfig.config.KeybindConfig;
@@ -17,7 +18,7 @@ public class Config {
     public static final PageConfig CREATURES_PAGE = new PageConfig("config.audiohotkeys.creatures.page");
     public static final PageConfig OTHER_PAGE = new PageConfig("config.audiohotkeys.other.page");
 
-    public static final KeybindConfig OPEN_CONFIG = new KeybindConfig(new int[]{0x18 /*O*/}, 0, 10, "config.audiohotkeys.open_config", "config.audiohotkeys.open_config.comment");
+    public static final KeybindConfig OPEN_CONFIG = new KeybindConfig(new int[]{InputConstants.KEY_H /*O*/}, 0, 10, "config.audiohotkeys.open_config", "config.audiohotkeys.open_config.comment");
 
     public static class Master {
         public static final KeybindConfig MASTER_MUTE =     new KeybindConfig(new int[]{}, 0, 10,   "config.audiohotkeys.master.mute",      "config.audiohotkeys.master.mute.comment");
@@ -250,8 +251,6 @@ public class Config {
         MAIN_PAGE.setPath("audio_hotkeys");
 
         MAIN_PAGE.loadVersion();
-
-        if(!MAIN_PAGE.hasVersion()) MalilibMigration.migrateFromMalilib();
 
         States.init();
 
